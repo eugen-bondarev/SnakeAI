@@ -14,3 +14,12 @@ file(GLOB src
 add_executable(${target_name} ${src})
 target_include_directories(${target_name} PUBLIC src)
 target_precompile_headers(${target_name} PUBLIC src/pch.h)
+
+add_subdirectory(external/glew/build/cmake)
+add_subdirectory(external/glfw)
+
+target_link_libraries(${target_name} glew_s)
+target_link_libraries(${target_name} glfw)
+
+target_include_directories(${target_name} PUBLIC external/glew/include)
+target_include_directories(${target_name} PUBLIC external/glfw/include)

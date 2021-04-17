@@ -1,8 +1,17 @@
 #include <iostream>
 
+#include "window/window.h"
+
 int main()
 {
-    std::cout << "Hello, world!\n";
+    Window window;
+
+    while (!window.ShouldClose())
+    {
+        window.PollEvents();
+
+        window.SwapBuffers();
+    }
 
     return 0;
 }
