@@ -23,3 +23,4 @@ target_link_libraries(${target_name} glfw)
 
 target_include_directories(${target_name} PUBLIC external/glew/include)
 target_include_directories(${target_name} PUBLIC external/glfw/include)
+target_include_directories(${target_name} PUBLIC src/external)
