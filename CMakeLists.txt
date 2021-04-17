@@ -13,3 +13,4 @@ file(GLOB src
 
 add_executable(${target_name} ${src})
 target_include_directories(${target_name} PUBLIC src)
+target_precompile_headers(${target_name} PUBLIC src/pch.h)
