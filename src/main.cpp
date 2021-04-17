@@ -1,36 +1,22 @@
 #include <iostream>
 
 #include "window/window.h"
-
-#include "imgui/imgui.h"
-#include "imgui/imgui_impl_glfw.h"
-#include "imgui/imgui_impl_opengl3.h"
+#include "gui/gui.h"
 
 int main()
 {
     Window window;
-    
-	IMGUI_CHECKVERSION();
-	ImGui::CreateContext();
-	ImGuiIO& io = ImGui::GetIO();
-
-	ImGui_ImplGlfw_InitForOpenGL(window.GetGlfwWindow(), true);
-	ImGui_ImplOpenGL3_Init();
+    GUI gui(window);
 
     while (!window.ShouldClose())
     {
         window.PollEvents();
 
-        ImGui_ImplOpenGL3_NewFrame();
-        ImGui_ImplGlfw_NewFrame();
-        ImGui::NewFrame();
+        gui.NewFrame();
 
         ImGui::ShowDemoWindow();
-        
-        window.Clear();
 
-        ImGui::Render();
-        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+        gui.Render();
 
         window.SwapBuffers();
     }

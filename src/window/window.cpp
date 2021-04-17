@@ -53,6 +53,7 @@ void Window::InitGlfw()
     glfwMakeContextCurrent(glfwWindow);
     glfwSwapInterval(1);
     glfwShowWindow(glfwWindow);
+    glfwMaximizeWindow(glfwWindow);
 }
 
 GLFWwindow* Window::GetGlfwWindow()
