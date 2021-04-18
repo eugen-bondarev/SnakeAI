@@ -11,6 +11,8 @@ public:
     void Update();
     void Draw(Field& field) const;
 
+    bool IsAlive() const;
+
     Cell& GetHead();
 
     enum class Direction
@@ -23,5 +25,8 @@ public:
 
 private:
     std::vector<RenderableCell> cells;
-    Direction dir;
+    Direction direction { static_cast<Direction>(rand() % 4) };
+    bool alive { true };
+
+    void Clamp();
 };

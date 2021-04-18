@@ -17,12 +17,16 @@ void SnakeAI::Update()
     timer += window.GetDeltaTime();
     if (timer >= 1.0f)
     {
-        snake.Update();
+        if (snake.IsAlive())
+            snake.Update();
+            
         timer = 0;
     }
 
     field.Clear();
-    snake.Draw(field);
+
+    if (snake.IsAlive())
+        snake.Draw(field);
 
     for (int x = 0; x < Field::SIZE; x++)
     {
