@@ -3,17 +3,35 @@
 SnakeAI::SnakeAI(Window& _window) : window { _window }
 {
     static int initialAmountOfGames { 5 };
-
-    for (int i = 0; i < initialAmountOfGames; i++)
-    {
-        games.emplace_back(SnakeGame());
-    }
+    games.resize(initialAmountOfGames);
 }
 
 void SnakeAI::Update()
 {
+    ImGui::ShowDemoWindow();
+
     ImGui::Begin("Game settings");
+        // Speed of updating the field.
         ImGui::DragFloat("Speed", &gameSpeed, 0.01f, 0.2f, 100.0f);
+
+        // List of all the games.
+        if (ImGui::CollapsingHeader("Games"))
+        {
+            for (int i = 0; i < games.size(); i++)
+            {
+                SnakeGame& game = games[i];
+
+                std::string label = "#" + std::to_string(game.GetID());
+                ImGui::AlignTextToFramePadding();
+                ImGui::Text(label.c_str()); ImGui::SameLine();
+
+                if (ImGui::Button(("Reborn##" + std::to_string(i)).c_str()))
+                {
+                    game.Reborn();
+                }
+            }
+        }
+
     ImGui::End();
 
     ImGui::Begin("Drawing", (bool*)0, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
@@ -37,14 +55,14 @@ void SnakeAI::Update()
     }
 
     // If we want to control one of the snakes (for example to test its behaviour).
-    if (games.size())
-    {
-        bool up = ImGui::IsKeyDown(GLFW_KEY_W);
-        bool left = ImGui::IsKeyDown(GLFW_KEY_A);
-        bool down = ImGui::IsKeyDown(GLFW_KEY_S);
-        bool right = ImGui::IsKeyDown(GLFW_KEY_D);
-        games[0].GetSnake().Control(up, left, down, right);
-    }
+    // if (games.size())
+    // {
+    //     bool up = ImGui::IsKeyDown(GLFW_KEY_W);
+    //     bool left = ImGui::IsKeyDown(GLFW_KEY_A);
+    //     bool down = ImGui::IsKeyDown(GLFW_KEY_S);
+    //     bool right = ImGui::IsKeyDown(GLFW_KEY_D);
+    //     games[0].GetSnake().Control(up, left, down, right);
+    // }
 
     field.Clear();
 

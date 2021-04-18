@@ -12,6 +12,7 @@ public:
 
     void Update();
     bool IsRunning() const;
+    void Reborn();
 
     Snake& GetSnake();
     Apple& GetApple();

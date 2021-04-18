@@ -87,6 +87,14 @@ void Snake::Control(bool up, bool left, bool down, bool right)
     if (right) SetDirection(Snake::Direction::Right);
 }
 
+void Snake::Reset()
+{
+    cells.clear();
+    cells.emplace_back(Cell(rand() % FIELD_SIZE, rand() % FIELD_SIZE));
+    alive = true;
+    direction = static_cast<Direction>(rand() % 4);
+}
+
 bool Snake::IsAlive() const
 {
     return alive;

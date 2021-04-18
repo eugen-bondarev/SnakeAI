@@ -21,6 +21,12 @@ bool SnakeGame::IsRunning() const
     return snake.IsAlive();
 }
 
+void SnakeGame::Reborn()
+{
+    snake.Reset();
+    apple = Apple();
+}
+
 Snake& SnakeGame::GetSnake()
 {
     return snake;

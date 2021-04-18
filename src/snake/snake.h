@@ -12,6 +12,7 @@ public:
     void Draw(Field& field) const;
     void AddTail();
     bool IsAlive() const;
+    void Reset();
 
     Cell& GetHead();
     Cell& GetLastCell();
