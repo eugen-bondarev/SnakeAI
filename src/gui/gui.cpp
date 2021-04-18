@@ -1,12 +1,12 @@
 #include "gui.h"
 
-GUI::GUI(Window& _window) : window { _window }
+GUI::GUI(GLFWwindow* _glfwWindow) : glfwWindow { _glfwWindow }
 {   
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO();
 
-	ImGui_ImplGlfw_InitForOpenGL(window.GetGlfwWindow(), true);
+	ImGui_ImplGlfw_InitForOpenGL(glfwWindow, true);
 	ImGui_ImplOpenGL3_Init();
 }
 
@@ -18,9 +18,7 @@ void GUI::NewFrame() const
 }
 
 void GUI::Render() const
-{        
-    window.Clear();
-
+{
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
@@ -30,4 +28,15 @@ GUI::~GUI()
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
+}
+
+void ImGuiUtil::WindowRect::Update()
+{
+    min = ImGui::GetWindowContentRegionMin();
+    max = ImGui::GetWindowContentRegionMax();
+
+    min.x += ImGui::GetWindowPos().x;
+    min.y += ImGui::GetWindowPos().y;
+    max.x += ImGui::GetWindowPos().x;
+    max.y += ImGui::GetWindowPos().y;
 }

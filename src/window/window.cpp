@@ -4,6 +4,7 @@ Window::Window(unsigned int width_param, unsigned int height_param) : width { wi
 {
     InitGlfw();
     InitGlew();
+    InitGui();
 }
 
 bool Window::ShouldClose() const
@@ -25,11 +26,28 @@ void Window::Clear() const
 {
     glClear(GL_COLOR_BUFFER_BIT);
 }
+    
+void Window::BeginFrame()
+{
+    PollEvents();
+    gui->NewFrame();
+    time.current = static_cast<float>(glfwGetTime());
+}
+
+void Window::EndFrame()
+{
+    Clear();
+    gui->Render();
+
+    time.delta = static_cast<float>(glfwGetTime()) - time.last;
+    time.last = time.current;
+    
+    SwapBuffers();
+}
 
 Window::~Window()
 {
-    glfwDestroyWindow(glfwWindow);
-    glfwTerminate();
+    ShutdownGlfw();
 }
 
 void Window::InitGlew()
@@ -56,7 +74,23 @@ void Window::InitGlfw()
     glfwMaximizeWindow(glfwWindow);
 }
 
+void Window::ShutdownGlfw()
+{    
+    glfwDestroyWindow(glfwWindow);
+    glfwTerminate();
+}
+
+void Window::InitGui()
+{
+    gui = std::make_unique<GUI>(glfwWindow);
+}
+
 GLFWwindow* Window::GetGlfwWindow()
 {
     return glfwWindow;
+}
+
+float Window::GetDeltaTime() const
+{
+    return time.delta;
 }

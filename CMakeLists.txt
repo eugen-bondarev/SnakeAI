@@ -2,7 +2,8 @@ cmake_minimum_required(VERSION 3.12)
 
 project(SnakeAI VERSION 0.0.1)
 
-set(target_name SnakeAI)
+set(target_name         SnakeAI)
+set(CMAKE_CXX_FLAGS     "${CMAKE_CXX_FLAGS} /std:c++17")
 
 file(GLOB src
     src/*.cpp

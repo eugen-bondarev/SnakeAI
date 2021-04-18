@@ -1,7 +1,5 @@
 #pragma once
 
-#include "window/window.h"
-
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_glfw.h"
 #include "imgui/imgui_impl_opengl3.h"
@@ -9,7 +7,7 @@
 class GUI
 {
 public:
-    GUI(Window& window);
+    GUI(GLFWwindow* glfwWindow);
 
     void NewFrame() const;
     void Render() const;
@@ -17,8 +15,21 @@ public:
     ~GUI();
 
 private:
-    Window& window;
+    GLFWwindow* glfwWindow;
 
     GUI(const GUI&) = delete;
     GUI& operator=(const GUI&) = delete;
 };
+
+namespace ImGuiUtil {
+
+struct WindowRect
+{
+    ImVec2 min;
+    ImVec2 max;
+
+    void Update();
+
+} inline static winRect;
+
+}
