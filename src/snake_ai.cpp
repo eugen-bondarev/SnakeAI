@@ -8,8 +8,6 @@ SnakeAI::SnakeAI(Window& _window) : window { _window }
 
 void SnakeAI::Update()
 {
-    ImGui::ShowDemoWindow();
-
     ImGui::Begin("Game settings");
         // Speed of updating the field.
         ImGui::DragFloat("Speed", &gameSpeed, 0.01f, 0.2f, 100.0f);
@@ -17,6 +15,14 @@ void SnakeAI::Update()
         // List of all the games.
         if (ImGui::CollapsingHeader("Games"))
         {
+            if (ImGui::Button("Reborn all"))
+            {
+                for (auto& game : games)
+                {
+                    game.Reborn();
+                }
+            }
+
             for (int i = 0; i < games.size(); i++)
             {
                 SnakeGame& game = games[i];
