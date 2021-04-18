@@ -1,9 +1,17 @@
 #include "snake_ai.h"
 
+#include "ai/neural_network.h"
+
 SnakeAI::SnakeAI(Window& _window) : window { _window }
 {
     static int initialAmountOfGames { 5 };
     games.resize(initialAmountOfGames);
+
+    NeuralNetwork nn({ 2, 2, 1 });
+
+    auto result = nn.Feed({ 0.2f, 0.3f });
+
+    LogOut(result[0]);
 }
 
 void SnakeAI::Update()
