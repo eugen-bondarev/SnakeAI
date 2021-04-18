@@ -81,9 +81,9 @@ void Snake::SetDirection(Direction _direction)
 
 void Snake::Control(bool up, bool left, bool down, bool right)
 {
-    if (up) SetDirection(Snake::Direction::Up);
-    if (left) SetDirection(Snake::Direction::Left);
-    if (down) SetDirection(Snake::Direction::Down);
+    if (up)    SetDirection(Snake::Direction::Up);
+    if (left)  SetDirection(Snake::Direction::Left);
+    if (down)  SetDirection(Snake::Direction::Down);
     if (right) SetDirection(Snake::Direction::Right);
 }
 
