@@ -9,7 +9,7 @@ namespace util {
 // Just in case somebody doesn't do that..
 inline static void InitRandomEngine()
 {
-    srand(time(0));
+    srand(static_cast<unsigned int>(time(0)));
 }
 
 inline static float GenRandomFloat(float bottom = 0.0f, float top = 1.0f)
