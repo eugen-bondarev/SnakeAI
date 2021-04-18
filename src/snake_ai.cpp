@@ -5,7 +5,7 @@
 SnakeAI::SnakeAI(Window& _window) : window { _window }
 {
     static int initialAmountOfGames { 5 };
-    games.resize(initialAmountOfGames);
+    population = std::make_unique<Population<Snake>>(initialAmountOfGames);
 }
 
 void SnakeAI::Update()
@@ -19,15 +19,15 @@ void SnakeAI::Update()
         {
             if (ImGui::Button("Reborn all"))
             {
-                for (auto& game : games)
+                for (auto& game : population->GetGenomes())
                 {
-                    game.Reborn();
+                    game->Reset();
                 }
             }
 
-            for (int i = 0; i < games.size(); i++)
+            for (int i = 0; i < population->GetGenomes().size(); i++)
             {
-                SnakeGame& game = games[i];
+                Snake& game = *population->GetGenomes()[i];
 
                 std::string label = "#" + std::to_string(game.GetID());
                 ImGui::AlignTextToFramePadding();
@@ -35,7 +35,7 @@ void SnakeAI::Update()
 
                 if (ImGui::Button(("Reborn##" + std::to_string(i)).c_str()))
                 {
-                    game.Reborn();
+                    game.Reset();
                 }
             }
         }
@@ -51,11 +51,11 @@ void SnakeAI::Update()
     timer += window.GetDeltaTime();
     if (timer >= 0.2f /* default speed factor */ * (1.0f / gameSpeed))
     {
-        for (auto& game : games)
+        for (auto& game : population->GetGenomes())
         {
-            if (game.IsRunning())
+            if (game->IsAlive())
             {
-                game.Update();
+                game->Update();
             }
         }
             
@@ -63,23 +63,23 @@ void SnakeAI::Update()
     }
 
     // If we want to control one of the snakes (for example to test its behaviour).
-    // if (games.size())
+    // if (population->GetGenomes().size())
     // {
     //     bool up = ImGui::IsKeyDown(GLFW_KEY_W);
     //     bool left = ImGui::IsKeyDown(GLFW_KEY_A);
     //     bool down = ImGui::IsKeyDown(GLFW_KEY_S);
     //     bool right = ImGui::IsKeyDown(GLFW_KEY_D);
-    //     games[0].GetSnake().Control(up, left, down, right);
+    //     population->GetGenomes()[0]->Control(up, left, down, right);
     // }
 
     field.Clear();
 
-    for (auto& game : games)
+    for (auto& game : population->GetGenomes())
     {
-        if (game.IsRunning())
+        if (game->IsAlive())
         {
-            game.GetSnake().Draw(field);
-            game.GetApple().Draw(field);
+            game->Draw(field);
+            game->GetApple().Draw(field);
         }
     }
 

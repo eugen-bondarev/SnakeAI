@@ -2,20 +2,25 @@
 
 #include "cell.h"
 #include "field.h"
+#include "apple.h"
 
-class Snake
+#include "ai/genetic/genome.h"
+
+class Snake : public Genome
 {
 public:
     Snake(Cell head = { rand() % FIELD_SIZE, rand() % FIELD_SIZE });
 
     void Update();
     void Draw(Field& field) const;
-    void AddTail();
     bool IsAlive() const;
     void Reset();
 
     Cell& GetHead();
     Cell& GetLastCell();
+    Apple& GetApple();
+
+    int GetID() const;
 
     enum class Direction { Up = 0, Left, Down, Right };
     std::map<Direction, Cell> moves = {
@@ -33,8 +38,15 @@ private:
     Direction direction { static_cast<Direction>(rand() % 4) };
     bool alive { true };
 
+    Apple apple;
+    
+    int id { 0 };
+
     void SaveLastPositionOfCells();
     void MoveHead();
     void Clamp();
     void MoveTail();
+    void IfEatingApple();
+
+    void AddTail();
 };

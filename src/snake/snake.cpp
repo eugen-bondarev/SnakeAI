@@ -1,7 +1,9 @@
 #include "snake.h"
 
-Snake::Snake(Cell head) : cells { { head } }
+Snake::Snake(Cell head) : Genome({ 2, 2, 4 }), cells { { head } }
 {
+    static int ids { 0 };
+    id = ids++;
 }
 
 void Snake::Update()
@@ -9,7 +11,17 @@ void Snake::Update()
     SaveLastPositionOfCells();
     MoveHead();
     Clamp();
+    IfEatingApple();
     MoveTail();
+}
+
+void Snake::IfEatingApple()
+{
+    if (GetHead() == apple)
+    {
+        AddTail();
+        apple = Apple();
+    }
 }
 
 void Snake::MoveHead()
@@ -108,4 +120,14 @@ Cell& Snake::GetHead()
 Cell& Snake::GetLastCell()
 {
     return cells[cells.size() - 1];
+}
+
+Apple& Snake::GetApple()
+{
+    return apple;
+}
+
+int Snake::GetID() const
+{
+    return id;
 }

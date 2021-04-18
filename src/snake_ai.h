@@ -2,9 +2,10 @@
 
 #include "snake/field.h"
 #include "snake/snake.h"
-#include "snake/snake_game.h"
 
 #include "window/window.h"
+
+#include "ai/genetic/population.h"
 
 class SnakeAI
 {
@@ -19,5 +20,6 @@ private:
     float gameSpeed = 1.0f;
 
     Field field;
-    std::vector<SnakeGame> games;
+
+    std::unique_ptr<Population<Snake>> population;
 };
