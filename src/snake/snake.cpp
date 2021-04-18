@@ -46,7 +46,7 @@ void Snake::Clamp()
         int x = cell.x;
         int y = cell.y;
 
-        if (x < 0 || x > Field::SIZE || y < 0 || y > Field::SIZE)
+        if (x < 0 || x >= Field::SIZE || y < 0 || y >= Field::SIZE)
         {
             alive = false;
             break;
