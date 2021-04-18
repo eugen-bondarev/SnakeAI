@@ -1,5 +1,10 @@
 #include "cell.h"
 
+bool Cell::operator==(const Cell& other) const
+{
+    return x == other.x && y == other.y;
+}
+
 ImU32 RenderableCell::GetColor()
 {
     static ImU32 empty = ImU32(ImColor(ImVec4(0.1f, 0.1f, 0.1f, 1.0f)));

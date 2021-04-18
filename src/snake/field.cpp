@@ -2,9 +2,9 @@
 
 Field::Field()
 {
-    for (int x = 0; x < Field::SIZE; x++)
+    for (int x = 0; x < FIELD_SIZE; x++)
     {
-        for (int y = 0; y < Field::SIZE; y++)
+        for (int y = 0; y < FIELD_SIZE; y++)
         {
             data[x][y].x = x;
             data[x][y].y = y;

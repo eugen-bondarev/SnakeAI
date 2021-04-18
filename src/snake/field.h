@@ -4,19 +4,20 @@
 
 #include "cell.h"
 
+#include "game_settings.h"
+
 class Field
 {
 public:
     Field();
-
-    inline static constexpr int SIZE = 32;
-    using Row = std::array<RenderableCell, Field::SIZE>;
+    
+    using Row = std::array<RenderableCell, FIELD_SIZE>;
 
     void Clear();
 
     Row& operator[](int i);
 
 private:
-    std::array<Row, Field::SIZE> data;
+    std::array<Row, FIELD_SIZE> data;
 
 };
