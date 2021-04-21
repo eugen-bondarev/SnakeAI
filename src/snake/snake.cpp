@@ -1,6 +1,6 @@
 #include "snake.h"
 
-Snake::Snake(Cell head) : Genome({ 10, 28, 26, 4 }), cells { { head } }
+Snake::Snake(Cell head) : Genome({ 10, 12, 12, 4 }), cells { { head } }
 {
     static int ids { 0 };
     id = ids++;
@@ -18,7 +18,7 @@ void Snake::SetStatistics(GameStatistics* statistics)
 
     if (cells.size() > statistics->bestScore)
     {
-        statistics->bestScore = cells.size();
+        statistics->bestScore = static_cast<int>(cells.size());
     }
     
     if (GetFitness() > statistics->bestFitnessOfPopulation)
@@ -28,7 +28,7 @@ void Snake::SetStatistics(GameStatistics* statistics)
 
     if (cells.size() > statistics->bestScoreOfPopulation)
     {
-        statistics->bestScoreOfPopulation = cells.size();
+        statistics->bestScoreOfPopulation = static_cast<int>(cells.size());
     }
 }
 
@@ -201,12 +201,12 @@ std::array<float, 4> Snake::DistanceToTail()
         {
             if (cells[i].x < cells[0].x)
             {
-                result[0] = (cells[0].x - cells[i].x) / FIELD_SIZE;
+                result[0] = static_cast<float>(cells[0].x - cells[i].x) / static_cast<float>(FIELD_SIZE);
             }
 
             if (cells[i].x > cells[0].x)
             {
-                result[1] = (cells[i].x - cells[0].x) / FIELD_SIZE;
+                result[1] = static_cast<float>(cells[i].x - cells[0].x) / static_cast<float>(FIELD_SIZE);
             }
         }
 
@@ -214,12 +214,12 @@ std::array<float, 4> Snake::DistanceToTail()
         {
             if (cells[i].y > cells[0].y)
             {
-                result[2] = (cells[i].y - cells[0].y) / FIELD_SIZE;
+                result[2] = static_cast<float>(cells[i].y - cells[0].y) / static_cast<float>(FIELD_SIZE);
             }
 
             if (cells[i].y < cells[0].y)
             {
-                result[3] = (cells[0].y - cells[i].y) / FIELD_SIZE;
+                result[3] = static_cast<float>(cells[0].y - cells[i].y) / static_cast<float>(FIELD_SIZE);
             }
         }
     }
