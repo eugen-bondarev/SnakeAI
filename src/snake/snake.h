@@ -32,15 +32,16 @@ public:
 
     void SetDirection(Direction _direction);
     void Control(bool up, bool left, bool down, bool right);
+    float GetFitness() const override;
 
 private:
+    int id { 0 };
     std::vector<RenderableCell> cells;
     Direction direction { static_cast<Direction>(rand() % 4) };
+    Apple apple;    
     bool alive { true };
-
-    Apple apple;
-    
-    int id { 0 };
+    int age { 0 };
+    int amountOfTurns { 0 };
 
     int GetDistanceToUpWall();
     int GetDistanceToLeftWall();

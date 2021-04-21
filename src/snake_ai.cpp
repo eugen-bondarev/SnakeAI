@@ -67,7 +67,7 @@ void SnakeAI::Update()
 
         if (!populationIsAlive)
         {
-            // Reproduce..
+            population->Evolution();
             population->Restart();
         }
             

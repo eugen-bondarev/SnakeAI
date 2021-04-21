@@ -16,6 +16,8 @@ void Snake::Update()
     Clamp();
     IfEatingApple();
     MoveTail();
+
+    age += 1;
 }
 
 void Snake::Decide()
@@ -152,9 +154,10 @@ bool Snake::DirectionIsValid(Direction newDirection)
     return false;
 }
 
-void Snake::SetDirection(Direction _direction)
+void Snake::SetDirection(Direction newDirection)
 {
-    direction = _direction;
+    direction = newDirection;
+    amountOfTurns += 1;
 }
 
 void Snake::Control(bool up, bool left, bool down, bool right)
@@ -171,6 +174,11 @@ void Snake::Reset()
     cells.emplace_back(Cell(rand() % FIELD_SIZE, rand() % FIELD_SIZE));
     alive = true;
     direction = static_cast<Direction>(rand() % 4);
+}
+
+float Snake::GetFitness() const
+{
+    return static_cast<float>(cells.size());
 }
 
 bool Snake::IsAlive() const

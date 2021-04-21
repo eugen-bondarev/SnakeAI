@@ -9,3 +9,8 @@ Genome::Genome(const NeuralNetwork& _neuralNetwork) : neuralNetwork { { _neuralN
 {
 
 }
+
+float Genome::GetFitness() const
+{
+    return 0;
+}

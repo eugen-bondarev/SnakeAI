@@ -28,7 +28,19 @@ public:
 
     void Evolution()
     {
-        
+        std::vector<T*> offspring;
+
+        std::vector<T*> fittest = Selection();
+
+        // genomes = offspring;
+    }
+
+    std::vector<T*> Selection(float percent = 8.0f)
+    {
+        std::vector<T*> fittest;
+        std::vector<T*> sortedByFitness = genomes;
+
+        return fittest;
     }
 
     void Restart()
