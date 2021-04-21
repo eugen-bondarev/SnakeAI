@@ -4,6 +4,7 @@
 
 class Neuron
 {
+friend class GA;
 friend class Layer;
 friend class NeuralNetwork;
 

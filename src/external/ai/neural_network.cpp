@@ -71,6 +71,11 @@ std::vector<value_t> NeuralNetwork::Feed(const std::vector<value_t>& inputs)
     return result;
 }
 
+const NeuralNetworkStructure& NeuralNetwork::GetStructure() const
+{
+    return structure;
+}
+
 Layer& NeuralNetwork::GetFirstLayer()
 {
     return layers[0];

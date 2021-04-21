@@ -2,6 +2,8 @@
 
 #include "snake_ai.h"
 
+#include "ai/genetic/genetic_algorithm.h"
+
 int main()
 {
     Window window;

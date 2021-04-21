@@ -10,6 +10,16 @@ SnakeAI::SnakeAI(Window& _window) : window { _window }
 
 void SnakeAI::Update()
 {
+    ImGui::Begin("Statistics");
+        ImGui::Text(("Generation: "   + std::to_string(population->GetGeneration())).c_str());
+        ImGui::Text(("Best fitness: " + std::to_string(statistics.bestFitness)).c_str());
+        ImGui::Text(("Best score: "   + std::to_string(statistics.bestScore)).c_str());
+        ImGui::Text(("Best fitness pop.: " + std::to_string(statistics.bestFitnessOfPopulation)).c_str());
+        ImGui::Text(("Best score pop.: "   + std::to_string(statistics.bestScoreOfPopulation)).c_str());
+        ImGui::Text(("Av. fitness: "  + std::to_string(statistics.averageFitness)).c_str());
+        ImGui::Text(("Av. score: "    + std::to_string(statistics.averageScore)).c_str());
+    ImGui::End();
+
     ImGui::Begin("Game settings");
         // Speed of updating the field.
         ImGui::DragFloat("Speed", &settings.speed, 0.01f, 0.2f, 100.0f);
@@ -55,8 +65,15 @@ void SnakeAI::Update()
     {
         bool populationIsAlive { false };
 
+        statistics.averageFitness = 0;
+        statistics.averageScore = 0;
+        statistics.bestFitnessOfPopulation = 0;
+        statistics.bestScoreOfPopulation = 0;
+
         for (auto& game : population->GetGenomes())
         {
+            game->SetStatistics(&statistics);
+
             if (game->IsAlive())
             {
                 game->Update();
@@ -64,6 +81,9 @@ void SnakeAI::Update()
                 populationIsAlive = true;
             }
         }
+
+        statistics.averageFitness /= population->GetGenomes().size();
+        statistics.averageScore /= population->GetGenomes().size();
 
         if (!populationIsAlive)
         {

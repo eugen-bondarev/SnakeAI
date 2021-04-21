@@ -6,11 +6,22 @@
 
 #include "ai/genetic/genome.h"
 
+struct GameStatistics
+{
+    float bestFitnessOfPopulation { 0 };
+    int bestScoreOfPopulation { 0 };
+    float bestFitness { 0 };
+    int bestScore { 0 };
+    float averageFitness { 0 };
+    float averageScore { 0 };
+};
+
 class Snake : public Genome
 {
 public:
     Snake(Cell head = { rand() % FIELD_SIZE, rand() % FIELD_SIZE });
 
+    void SetStatistics(GameStatistics* statistics);
     void Update();
     void Draw(Field& field) const;
     bool IsAlive() const;
@@ -41,6 +52,8 @@ private:
     Apple apple;    
     bool alive { true };
     int age { 0 };
+    int maxAmountOfMoves { 50 };
+    int movesLeft { maxAmountOfMoves };
     int amountOfTurns { 0 };
 
     int GetDistanceToUpWall();

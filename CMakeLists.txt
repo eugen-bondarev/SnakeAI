@@ -12,6 +12,7 @@ file(GLOB src
     src/**/*.cpp
     src/**/**/*.cpp
     src/**/**/**/*.cpp
+    src/**/**/**/**/*.cpp
 )
 
 add_executable(${target_name} ${src})

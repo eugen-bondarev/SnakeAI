@@ -1,9 +1,35 @@
 #include "snake.h"
 
-Snake::Snake(Cell head) : Genome({ 6, 18, 18, 1 }), cells { { head } }
+Snake::Snake(Cell head) : Genome({ 6, 36, 26, 7, 4 }), cells { { head } }
 {
     static int ids { 0 };
     id = ids++;
+}
+
+void Snake::SetStatistics(GameStatistics* statistics)
+{
+    statistics->averageFitness += GetFitness();
+    statistics->averageScore += cells.size();
+    
+    if (GetFitness() > statistics->bestFitness)
+    {
+        statistics->bestFitness = GetFitness();
+    }
+
+    if (cells.size() > statistics->bestScore)
+    {
+        statistics->bestScore = cells.size();
+    }
+    
+    if (GetFitness() > statistics->bestFitnessOfPopulation)
+    {
+        statistics->bestFitnessOfPopulation = GetFitness();
+    }
+
+    if (cells.size() > statistics->bestScoreOfPopulation)
+    {
+        statistics->bestScoreOfPopulation = cells.size();
+    }
 }
 
 void Snake::Update()
@@ -23,17 +49,29 @@ void Snake::Update()
 void Snake::Decide()
 {
     std::vector<float> input = {
-        static_cast<float>(GetDistanceToUpWall())    / FIELD_SIZE,
-        static_cast<float>(GetDistanceToLeftWall())  / FIELD_SIZE,
-        static_cast<float>(GetDistanceToDownWall())  / FIELD_SIZE,
-        static_cast<float>(GetDistanceToRightWall()) / FIELD_SIZE,
-        static_cast<float>(GetDistanceToAppleX())    / FIELD_SIZE,
-        static_cast<float>(GetDistanceToAppleY())    / FIELD_SIZE
+        static_cast<float>(GetDistanceToUpWall())    / static_cast<float>(FIELD_SIZE),
+        static_cast<float>(GetDistanceToDownWall())  / static_cast<float>(FIELD_SIZE),
+        static_cast<float>(GetDistanceToLeftWall())  / static_cast<float>(FIELD_SIZE),
+        static_cast<float>(GetDistanceToRightWall()) / static_cast<float>(FIELD_SIZE),
+        static_cast<float>(GetDistanceToAppleX())    / static_cast<float>(FIELD_SIZE),
+        static_cast<float>(GetDistanceToAppleY())    / static_cast<float>(FIELD_SIZE)
     };
 
-    float result = neuralNetwork.Feed(input)[0];
+    auto result = neuralNetwork.Feed(input);
 
-    Direction newDirection = static_cast<Direction>(result * 4.0f);
+    float maxValue = -1.0f;
+    int maxIndex = 0;
+
+    for (int i = 0; i < result.size(); i++)
+    {
+        if (result[i] > maxValue)
+        {
+            maxValue = result[i];
+            maxIndex = i;
+        }
+    }
+
+    Direction newDirection = static_cast<Direction>(maxIndex);
 
     if (DirectionIsValid(newDirection))
     {
@@ -47,6 +85,7 @@ void Snake::IfEatingApple()
     {
         AddTail();
         apple = Apple();
+        movesLeft = maxAmountOfMoves;
     }
 }
 
@@ -134,7 +173,7 @@ void Snake::Clamp()
         int x = cell.x;
         int y = cell.y;
 
-        if (x < 0 || x >= FIELD_SIZE || y < 0 || y >= FIELD_SIZE)
+        if (x < 0 || x >= FIELD_SIZE || y < 0 || y >= FIELD_SIZE || movesLeft <= 0)
         {
             alive = false;
             break;
@@ -158,6 +197,7 @@ void Snake::SetDirection(Direction newDirection)
 {
     direction = newDirection;
     amountOfTurns += 1;
+    movesLeft -= 1;
 }
 
 void Snake::Control(bool up, bool left, bool down, bool right)
@@ -178,7 +218,7 @@ void Snake::Reset()
 
 float Snake::GetFitness() const
 {
-    return static_cast<float>(cells.size());
+    return static_cast<float>(cells.size()) + static_cast<float>(age) / 1000.0f;
 }
 
 bool Snake::IsAlive() const

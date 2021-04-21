@@ -6,10 +6,14 @@
 
 class NeuralNetwork
 {
+friend class GA;
+
 public:
     NeuralNetwork(const NeuralNetworkStructure& structure);
 
     std::vector<value_t> Feed(const std::vector<value_t>& inputs);
+
+    const NeuralNetworkStructure& GetStructure() const;
 
 private:
     std::vector<Layer> layers;

@@ -6,6 +6,7 @@
 
 class Layer
 {
+friend class GA;
 friend class NeuralNetwork;
 
 private:

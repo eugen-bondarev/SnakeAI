@@ -24,6 +24,7 @@ private:
     Window& window;
     
     GameSettings settings;
+    GameStatistics statistics;
 
     Field field;
 
