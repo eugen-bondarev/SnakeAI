@@ -4,7 +4,8 @@
 
 SnakeAI::SnakeAI(Window& _window) : window { _window }
 {
-    static int initialAmountOfGames { 5000 };
+    // 2000 to 5000 is an optimal number for this particular game.
+    static int initialAmountOfGames { 2000 };
     population = std::make_unique<Population<Snake>>(initialAmountOfGames);
 }
 

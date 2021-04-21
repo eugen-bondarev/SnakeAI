@@ -6,7 +6,7 @@
 
 using float_bits_t = std::bitset<sizeof(float) * CHAR_BIT>;
 
-inline static float_bits_t FloatToBits(float n)
+static float_bits_t FloatToBits(float n)
 {
     union
     {
@@ -21,7 +21,7 @@ inline static float_bits_t FloatToBits(float n)
     return bits;
 }
 
-inline static float BitsToFloat(const float_bits_t& param) {
+static float BitsToFloat(const float_bits_t& param) {
     const auto val = param.to_ulong();
     float result;
 
@@ -30,51 +30,20 @@ inline static float BitsToFloat(const float_bits_t& param) {
     return result;
 }
 
-value_t BitwiseCrossover(value_t parent0, value_t parent1)
+static value_t BitwiseCrossover(value_t parent0, value_t parent1)
 {
     const float_bits_t bitsOfParent0 = FloatToBits(parent0);
-    const float_bits_t bitsOfParent1 = FloatToBits(parent1);
-    // float_bits_t bitsOfChild = FloatToBits(0);
+    float_bits_t child = FloatToBits(parent1);
 
-    // const bool randomBool = rand() % 2 == 1;
-    // const float_bits_t& firstParent = (randomBool) ? bitsOfParent0 : bitsOfParent1;
-    // const float_bits_t& secondParent = (randomBool) ? bitsOfParent1 : bitsOfParent0;
-
-    // const int cross = rand() % bitsOfChild.size();
-
-    // for (int bit = 0; bit < cross; bit++)
-    // {
-    //     bitsOfChild[bit] = firstParent[bit];
-    // }
-
-    // for (int bit = cross; bit < bitsOfChild.size(); bit++)
-    // {
-    //     bitsOfChild[bit] = secondParent[bit];
-    // }
-
-    // float child = BitsToFloat(bitsOfChild);
-
-    float_bits_t ch = FloatToBits(parent0);
-
-    for (int i = rand() % ch.size(); i > 0; i--)
+    for (int i = rand() % child.size(); i >= 0; i--)
     {
-        ch[i] = bitsOfParent1[i];
+        child[i] = bitsOfParent0[i];
     }
-
-    float child = BitsToFloat(ch);
     
-    return child;
+    return BitsToFloat(child);
 }
 
-value_t NumberCrossover(value_t parent0, value_t parent1)
-{    
-    if (rand() % 2 == 1)
-        return parent0;
-    else
-        return parent1;
-}
-
-value_t BitwiseMutation(value_t value, float bitMutationRate = 1.0f / 6.5f)
+static value_t BitwiseMutation(value_t value, float bitMutationRate = 1.0f / 6.5f)
 {
     float_bits_t bits = FloatToBits(value);
 

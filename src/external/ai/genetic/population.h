@@ -93,32 +93,19 @@ public:
         return parent;
     }
 
-    static std::vector<T*> Crossover(const std::vector<T*>& fittest, int sizeOfNewPopulation, const std::vector<int>& roulette, int inject = 0)
+    static std::vector<T*> Crossover(const std::vector<T*>& fittest, int sizeOfNewPopulation, const std::vector<int>& roulette)
     {
         std::vector<T*> offspring;
 
-        for (int i = 0; i < sizeOfNewPopulation - inject; i += 1)
+        for (int i = 0; i < sizeOfNewPopulation; i += 1)
         {
-            T* newGenome0 = new T();
-            // T* newGenome1 = new T();
+            T* newGenome = new T();
 
             T* parent0 = SelectParent(fittest, roulette);
             T* parent1 = SelectParent(fittest, roulette, parent0);
 
             const NeuralNetwork newNeuralNetwork0 = GA::Crossover(parent0->GetNeuralNetwork(), parent1->GetNeuralNetwork());
-            // const NeuralNetwork newNeuralNetwork1 = GA::Crossover(parent0->GetNeuralNetwork(), parent1->GetNeuralNetwork());
-
-            newGenome0->SetNeuralNetwork(newNeuralNetwork0);
-            // newGenome1->SetNeuralNetwork(newNeuralNetwork1);
-
-            offspring.emplace_back(newGenome0);
-            // offspring.emplace_back(newGenome1);
-        }
-
-        for (int i = 0; i < inject; i++)
-        {
-            T* newGenome = new T();
-            newGenome->SetNeuralNetwork(NeuralNetwork(offspring[0]->GetNeuralNetwork().GetStructure()));
+            newGenome->SetNeuralNetwork(newNeuralNetwork0);
             offspring.emplace_back(newGenome);
         }
 
