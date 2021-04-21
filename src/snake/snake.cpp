@@ -1,6 +1,6 @@
 #include "snake.h"
 
-Snake::Snake(Cell head) : Genome({ 6, 36, 26, 7, 4 }), cells { { head } }
+Snake::Snake(Cell head) : Genome({ 10, 28, 26, 4 }), cells { { head } }
 {
     static int ids { 0 };
     id = ids++;
@@ -32,6 +32,19 @@ void Snake::SetStatistics(GameStatistics* statistics)
     }
 }
 
+bool Snake::EatsItself()
+{
+    for (int i = 1; i < cells.size(); i++)
+    {
+        if (cells[0].x == cells[i].x && cells[0].y == cells[i].y)
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 void Snake::Update()
 {
     SaveLastPositionOfCells();
@@ -48,11 +61,18 @@ void Snake::Update()
 
 void Snake::Decide()
 {
+    auto distanceToTail = DistanceToTail();
     std::vector<float> input = {
         static_cast<float>(GetDistanceToUpWall())    / static_cast<float>(FIELD_SIZE),
         static_cast<float>(GetDistanceToDownWall())  / static_cast<float>(FIELD_SIZE),
         static_cast<float>(GetDistanceToLeftWall())  / static_cast<float>(FIELD_SIZE),
         static_cast<float>(GetDistanceToRightWall()) / static_cast<float>(FIELD_SIZE),
+
+        distanceToTail[0],
+        distanceToTail[1],
+        distanceToTail[2],
+        distanceToTail[3],
+
         static_cast<float>(GetDistanceToAppleX())    / static_cast<float>(FIELD_SIZE),
         static_cast<float>(GetDistanceToAppleY())    / static_cast<float>(FIELD_SIZE)
     };
@@ -166,8 +186,54 @@ int Snake::GetDistanceToAppleY()
     return cells[0].y - apple.y;
 }
 
+std::array<float, 4> Snake::DistanceToTail()
+{    
+    std::array<float, 4> result;
+
+    result[0] = -1;
+    result[1] = -1;
+    result[2] = -1;
+    result[3] = -1;
+
+    for (int i = 1; i < cells.size(); i++)
+    {
+        if (cells[i].y == cells[0].y)
+        {
+            if (cells[i].x < cells[0].x)
+            {
+                result[0] = (cells[0].x - cells[i].x) / FIELD_SIZE;
+            }
+
+            if (cells[i].x > cells[0].x)
+            {
+                result[1] = (cells[i].x - cells[0].x) / FIELD_SIZE;
+            }
+        }
+
+        if (cells[i].x == cells[0].x)
+        {
+            if (cells[i].y > cells[0].y)
+            {
+                result[2] = (cells[i].y - cells[0].y) / FIELD_SIZE;
+            }
+
+            if (cells[i].y < cells[0].y)
+            {
+                result[3] = (cells[0].y - cells[i].y) / FIELD_SIZE;
+            }
+        }
+    }
+
+    return result;
+}
+
 void Snake::Clamp()
 {
+    if (EatsItself())
+    {
+        alive = false;
+    }
+
     for (const auto& cell : cells)
     {
         int x = cell.x;

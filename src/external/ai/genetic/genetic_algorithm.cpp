@@ -100,9 +100,7 @@ NeuralNetwork GA::Crossover(const NeuralNetwork& parent0, const NeuralNetwork& p
             bias_t biasOfParent0 = parent0.layers[l].neurons[n].bias;
             bias_t biasOfParent1 = parent1.layers[l].neurons[n].bias;
             bias_t biasOfChild = BitwiseCrossover(biasOfParent0, biasOfParent1);
-            // bias_t biasOfChild = NumberCrossover(biasOfParent0, biasOfParent1);
-
-            // while (std::isnan(biasOfChild) || biasOfChild < util::BIAS_BOTTOM || biasOfChild > util::BIAS_TOP)
+            
             while (std::isnan(biasOfChild))
             {
                 biasOfChild = BitwiseCrossover(biasOfParent0, biasOfParent1);
@@ -111,7 +109,6 @@ NeuralNetwork GA::Crossover(const NeuralNetwork& parent0, const NeuralNetwork& p
             if ((static_cast<float>(rand()) / static_cast<float>(RAND_MAX)) < 0.1f)
             {
                 float mutated = BitwiseMutation(biasOfChild, bitMutationRate);
-                // if (!std::isnan(mutated) && mutated > util::BIAS_BOTTOM && mutated < util::BIAS_TOP)
                 if (!std::isnan(mutated))
                 {
                     biasOfChild = mutated;
@@ -125,9 +122,7 @@ NeuralNetwork GA::Crossover(const NeuralNetwork& parent0, const NeuralNetwork& p
                 weight_t weightOfParent0 = parent0.layers[l].neurons[n].weights[w];
                 weight_t weightOfParent1 = parent1.layers[l].neurons[n].weights[w];
                 weight_t weightOfChild = BitwiseCrossover(weightOfParent0, weightOfParent1);
-                // weight_t weightOfChild = NumberCrossover(weightOfParent0, weightOfParent1);
-
-                // while (std::isnan(weightOfChild) || weightOfChild < util::WEIGHT_BOTTOM || weightOfChild > util::WEIGHT_TOP)
+                
                 while (std::isnan(weightOfChild))
                 {
                     weightOfChild = BitwiseCrossover(weightOfParent0, weightOfParent1);
@@ -136,7 +131,6 @@ NeuralNetwork GA::Crossover(const NeuralNetwork& parent0, const NeuralNetwork& p
                 if ((static_cast<float>(rand()) / static_cast<float>(RAND_MAX)) < 0.02f)
                 {
                     float mutated = BitwiseMutation(weightOfChild, bitMutationRate);
-                    // if (!std::isnan(mutated) && mutated > util::WEIGHT_BOTTOM && mutated < util::WEIGHT_TOP)
                     if (!std::isnan(mutated))
                     {
                         weightOfChild = mutated;

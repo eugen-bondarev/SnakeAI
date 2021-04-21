@@ -62,6 +62,9 @@ private:
     int GetDistanceToRightWall();
     int GetDistanceToAppleX();
     int GetDistanceToAppleY();
+
+    bool EatsItself();
+    std::array<float, 4> DistanceToTail();
     
     bool DirectionIsValid(Direction newDirection);
     void SaveLastPositionOfCells();
