@@ -26,6 +26,19 @@ public:
         genomes.clear();
     }
 
+    void Evolution()
+    {
+        
+    }
+
+    void Restart()
+    {
+        for (auto& genome : genomes)
+        {
+            genome->Reset();
+        }
+    }
+
     std::vector<T*>& GetGenomes()
     {
         return genomes;

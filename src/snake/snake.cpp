@@ -1,6 +1,6 @@
 #include "snake.h"
 
-Snake::Snake(Cell head) : Genome({ 2, 2, 4 }), cells { { head } }
+Snake::Snake(Cell head) : Genome({ 6, 18, 18, 1 }), cells { { head } }
 {
     static int ids { 0 };
     id = ids++;
@@ -9,10 +9,34 @@ Snake::Snake(Cell head) : Genome({ 2, 2, 4 }), cells { { head } }
 void Snake::Update()
 {
     SaveLastPositionOfCells();
+
+    Decide();
+
     MoveHead();
     Clamp();
     IfEatingApple();
     MoveTail();
+}
+
+void Snake::Decide()
+{
+    std::vector<float> input = {
+        static_cast<float>(GetDistanceToUpWall())    / FIELD_SIZE,
+        static_cast<float>(GetDistanceToLeftWall())  / FIELD_SIZE,
+        static_cast<float>(GetDistanceToDownWall())  / FIELD_SIZE,
+        static_cast<float>(GetDistanceToRightWall()) / FIELD_SIZE,
+        static_cast<float>(GetDistanceToAppleX())    / FIELD_SIZE,
+        static_cast<float>(GetDistanceToAppleY())    / FIELD_SIZE
+    };
+
+    float result = neuralNetwork.Feed(input)[0];
+
+    Direction newDirection = static_cast<Direction>(result * 4.0f);
+
+    if (DirectionIsValid(newDirection))
+    {
+        SetDirection(newDirection);
+    }
 }
 
 void Snake::IfEatingApple()
@@ -71,6 +95,36 @@ void Snake::AddTail()
     cells.emplace_back(cell);
 }
 
+int Snake::GetDistanceToUpWall()
+{
+    return cells[0].y;
+}
+
+int Snake::GetDistanceToLeftWall()
+{
+    return cells[0].x;
+}
+
+int Snake::GetDistanceToDownWall()
+{
+    return FIELD_SIZE - cells[0].y;
+}
+
+int Snake::GetDistanceToRightWall()
+{
+    return FIELD_SIZE - cells[0].x;
+}
+
+int Snake::GetDistanceToAppleX()
+{
+    return cells[0].x - apple.x;
+}
+
+int Snake::GetDistanceToAppleY()
+{
+    return cells[0].y - apple.y;
+}
+
 void Snake::Clamp()
 {
     for (const auto& cell : cells)
@@ -84,6 +138,18 @@ void Snake::Clamp()
             break;
         }
     }
+}
+
+bool Snake::DirectionIsValid(Direction newDirection)
+{
+    if (direction == newDirection)                                         return false;
+
+    if (direction == Direction::Left  && newDirection != Direction::Right) return true;
+    if (direction == Direction::Right && newDirection != Direction::Left)  return true;
+    if (direction == Direction::Up    && newDirection != Direction::Down)  return true;
+    if (direction == Direction::Down  && newDirection != Direction::Up)    return true;
+
+    return false;
 }
 
 void Snake::SetDirection(Direction _direction)

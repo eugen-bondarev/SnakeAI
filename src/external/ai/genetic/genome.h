@@ -8,6 +8,6 @@ public:
     Genome(const NeuralNetworkStructure& structure);
     Genome(const NeuralNetwork& neuralNetwork);
 
-private:
+protected:
     NeuralNetwork neuralNetwork;
 };

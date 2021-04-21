@@ -42,11 +42,19 @@ private:
     
     int id { 0 };
 
+    int GetDistanceToUpWall();
+    int GetDistanceToLeftWall();
+    int GetDistanceToDownWall();
+    int GetDistanceToRightWall();
+    int GetDistanceToAppleX();
+    int GetDistanceToAppleY();
+    
+    bool DirectionIsValid(Direction newDirection);
     void SaveLastPositionOfCells();
+    void Decide();
     void MoveHead();
     void Clamp();
     void MoveTail();
     void IfEatingApple();
-
     void AddTail();
 };

@@ -4,7 +4,7 @@
 
 SnakeAI::SnakeAI(Window& _window) : window { _window }
 {
-    static int initialAmountOfGames { 5 };
+    static int initialAmountOfGames { 5000 };
     population = std::make_unique<Population<Snake>>(initialAmountOfGames);
 }
 
@@ -12,7 +12,9 @@ void SnakeAI::Update()
 {
     ImGui::Begin("Game settings");
         // Speed of updating the field.
-        ImGui::DragFloat("Speed", &gameSpeed, 0.01f, 0.2f, 100.0f);
+        ImGui::DragFloat("Speed", &settings.speed, 0.01f, 0.2f, 100.0f);
+
+        ImGui::Checkbox("Force full speed", &settings.forceFullSpeed);
 
         // List of all the games.
         if (ImGui::CollapsingHeader("Games"))
@@ -49,28 +51,28 @@ void SnakeAI::Update()
     static float timer { 0 };
 
     timer += window.GetDeltaTime();
-    if (timer >= 0.2f /* default speed factor */ * (1.0f / gameSpeed))
+    if (settings.forceFullSpeed || timer >= 0.2f * (1.0f / settings.speed))
     {
+        bool populationIsAlive { false };
+
         for (auto& game : population->GetGenomes())
         {
             if (game->IsAlive())
             {
                 game->Update();
+
+                populationIsAlive = true;
             }
+        }
+
+        if (!populationIsAlive)
+        {
+            // Reproduce..
+            population->Restart();
         }
             
         timer = 0;
     }
-
-    // If we want to control one of the snakes (for example to test its behaviour).
-    // if (population->GetGenomes().size())
-    // {
-    //     bool up = ImGui::IsKeyDown(GLFW_KEY_W);
-    //     bool left = ImGui::IsKeyDown(GLFW_KEY_A);
-    //     bool down = ImGui::IsKeyDown(GLFW_KEY_S);
-    //     bool right = ImGui::IsKeyDown(GLFW_KEY_D);
-    //     population->GetGenomes()[0]->Control(up, left, down, right);
-    // }
 
     field.Clear();
 

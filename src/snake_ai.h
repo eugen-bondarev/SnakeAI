@@ -7,6 +7,12 @@
 
 #include "ai/genetic/population.h"
 
+struct GameSettings
+{
+    float speed { 4.0f };
+    bool forceFullSpeed { true };
+};
+
 class SnakeAI
 {
 public:
@@ -16,8 +22,8 @@ public:
 
 private:
     Window& window;
-
-    float gameSpeed = 1.0f;
+    
+    GameSettings settings;
 
     Field field;
 
