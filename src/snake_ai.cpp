@@ -22,12 +22,9 @@ void SnakeAI::Update()
     ImGui::End();
 
     ImGui::Begin("Game settings");
-        // Speed of updating the field.
         ImGui::DragFloat("Speed", &settings.speed, 0.01f, 0.2f, 100.0f);
-
         ImGui::Checkbox("Force full speed", &settings.forceFullSpeed);
 
-        // List of all the games.
         if (ImGui::CollapsingHeader("Games"))
         {
             if (ImGui::Button("Reborn all"))
@@ -52,7 +49,6 @@ void SnakeAI::Update()
                 }
             }
         }
-
     ImGui::End();
 
     ImGui::Begin("Drawing", (bool*)0, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
