@@ -43,7 +43,7 @@ static value_t BitwiseCrossover(value_t parent0, value_t parent1)
     return BitsToFloat(child);
 }
 
-static value_t BitwiseMutation(value_t value, float bitMutationRate = 1.0f / 6.5f)
+static value_t BitwiseMutation(value_t value, float bitMutationRate)
 {
     float_bits_t bits = FloatToBits(value);
 
@@ -58,7 +58,7 @@ static value_t BitwiseMutation(value_t value, float bitMutationRate = 1.0f / 6.5
     return BitsToFloat(bits);
 }
 
-NeuralNetwork GA::Crossover(const NeuralNetwork& parent0, const NeuralNetwork& parent1, float mutationRate, float bitMutationRate)
+NeuralNetwork GA::Crossover(const NeuralNetwork& parent0, const NeuralNetwork& parent1, MutationTendency mutationTendency)
 {
     NeuralNetwork child(parent0.GetStructure());
 
@@ -75,9 +75,9 @@ NeuralNetwork GA::Crossover(const NeuralNetwork& parent0, const NeuralNetwork& p
                 biasOfChild = BitwiseCrossover(biasOfParent0, biasOfParent1);
             }
 
-            if ((static_cast<float>(rand()) / static_cast<float>(RAND_MAX)) < 0.1f)
+            if ((static_cast<float>(rand()) / static_cast<float>(RAND_MAX)) < mutationTendency.biasMutationRate.chanceOfMutation)
             {
-                float mutated = BitwiseMutation(biasOfChild, bitMutationRate);
+                float mutated = BitwiseMutation(biasOfChild, mutationTendency.biasMutationRate.chanceOfBitMutation);
                 if (!std::isnan(mutated))
                 {
                     biasOfChild = mutated;
@@ -97,9 +97,9 @@ NeuralNetwork GA::Crossover(const NeuralNetwork& parent0, const NeuralNetwork& p
                     weightOfChild = BitwiseCrossover(weightOfParent0, weightOfParent1);
                 }
 
-                if ((static_cast<float>(rand()) / static_cast<float>(RAND_MAX)) < 0.02f)
+                if ((static_cast<float>(rand()) / static_cast<float>(RAND_MAX)) < mutationTendency.weightMutationRate.chanceOfMutation)
                 {
-                    float mutated = BitwiseMutation(weightOfChild, bitMutationRate);
+                    float mutated = BitwiseMutation(weightOfChild, mutationTendency.weightMutationRate.chanceOfBitMutation);
                     if (!std::isnan(mutated))
                     {
                         weightOfChild = mutated;
