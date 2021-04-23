@@ -7,12 +7,6 @@
 
 #include "ai/genetic/population.h"
 
-struct GameSettings
-{
-    float speed { 4.0f };
-    bool forceFullSpeed { true };
-};
-
 class SnakeAI
 {
 public:
@@ -23,10 +17,16 @@ public:
 private:
     Window& window;
     
-    GameSettings settings;
     GameStatistics statistics;
 
-    Field field;
+    void RenderStatistics();
+
+    struct {
+        float speed { 4.0f };
+        bool forceFullSpeed { true };
+    } settings;
+
+    void RenderSettings();
 
     struct {
         int border { 10 };
@@ -35,5 +35,12 @@ private:
         bool geneticSnakeColor { false };
     } visual;
 
+    void RenderVisualSettings();
+
+    Field field;
+
     std::unique_ptr<Population<Snake>> population;
+
+    void UpdatePopulation();
+    void RenderGames();
 };

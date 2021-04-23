@@ -9,22 +9,28 @@ SnakeAI::SnakeAI(Window& _window) : window { _window }
     population = std::make_unique<Population<Snake>>(initialAmountOfGames);
 }
 
-void SnakeAI::Update()
+void SnakeAI::RenderStatistics()
 {
     ImGui::Begin("Statistics");
-        ImGui::Text(("Generation: "   + std::to_string(population->GetGeneration())).c_str());
-        ImGui::Text(("Best fitness: " + std::to_string(statistics.bestFitness)).c_str());
-        ImGui::Text(("Best score: "   + std::to_string(statistics.bestScore)).c_str());
+        ImGui::Text(("Generation: "        + std::to_string(population->GetGeneration())).c_str());
+        ImGui::Text(("Best fitness: "      + std::to_string(statistics.bestFitness)).c_str());
+        ImGui::Text(("Best score: "        + std::to_string(statistics.bestScore)).c_str());
         ImGui::Text(("Best fitness pop.: " + std::to_string(statistics.bestFitnessOfPopulation)).c_str());
         ImGui::Text(("Best score pop.: "   + std::to_string(statistics.bestScoreOfPopulation)).c_str());
-        ImGui::Text(("Av. fitness: "  + std::to_string(statistics.averageFitness)).c_str());
-        ImGui::Text(("Av. score: "    + std::to_string(statistics.averageScore)).c_str());
+        ImGui::Text(("Av. fitness: "       + std::to_string(statistics.averageFitness)).c_str());
+        ImGui::Text(("Av. score: "         + std::to_string(statistics.averageScore)).c_str());
     ImGui::End();
+}
 
+void SnakeAI::RenderVisualSettings()
+{    
     ImGui::Begin("Visual");
         ImGui::Checkbox("Genetic snake color", &visual.geneticSnakeColor);
     ImGui::End();
+}
 
+void SnakeAI::RenderSettings()
+{
     ImGui::Begin("Game settings");
         ImGui::DragFloat("Speed", &settings.speed, 0.01f, 0.2f, 100.0f);
         ImGui::Checkbox("Force full speed", &settings.forceFullSpeed);
@@ -54,15 +60,14 @@ void SnakeAI::Update()
             }
         }
     ImGui::End();
+}
 
-    ImGui::Begin("Drawing", (bool*)0, ImGuiWindowFlags_NoCollapse);
+void SnakeAI::UpdatePopulation()
+{
+    static float updateTimer { 0 };
 
-    ImGuiUtil::winRect.Update();
-    
-    static float timer { 0 };
-
-    timer += window.GetDeltaTime();
-    if (settings.forceFullSpeed || timer >= 0.2f * (1.0f / settings.speed))
+    updateTimer += window.GetDeltaTime();
+    if (settings.forceFullSpeed || updateTimer >= 0.2f * (1.0f / settings.speed))
     {
         bool populationIsAlive { false };
 
@@ -92,8 +97,15 @@ void SnakeAI::Update()
             population->Restart();
         }
             
-        timer = 0;
+        updateTimer = 0;
     }
+}
+
+void SnakeAI::RenderGames()
+{   
+    ImGui::Begin("Population", (bool*)0, ImGuiWindowFlags_NoCollapse);
+
+    ImGuiUtil::winRect.Update();
 
     field.Clear();
 
@@ -165,4 +177,14 @@ void SnakeAI::Update()
     }
 
     ImGui::End();
+}
+
+void SnakeAI::Update()
+{
+    RenderStatistics();
+    RenderVisualSettings();
+    RenderSettings();
+
+    UpdatePopulation();
+    RenderGames();
 }
