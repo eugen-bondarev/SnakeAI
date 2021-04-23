@@ -7,17 +7,17 @@ template <typename T>
 class Population
 {
 public:
-    Population(int amount)
+    Population(int sizeOfPopulation)
     {
-        genomes.resize(amount);
+        genomes.resize(sizeOfPopulation);
 
-        for (int i = 0; i < amount; i++)
+        for (int i = 0; i < sizeOfPopulation; i++)
         {
             genomes[i] = new T();
         }
     }
 
-    ~Population()
+    void KillPopulation()
     {
         for (auto& genome : genomes)
         {
@@ -25,27 +25,26 @@ public:
         }
 
         genomes.clear();
+    }
+
+    ~Population()
+    {
+        KillPopulation();
     }
 
     void Evolution()
     {
-        std::vector<T*> fittest = Population<T>::Selection(genomes);
+        std::vector<T*> fittest = Population<T>::Selection(genomes, 8.0f);
         std::vector<int> roulette = Population<T>::CreateRoulette(fittest);
         std::vector<T*> offspring = Population<T>::Crossover(fittest, static_cast<int>(genomes.size()), roulette);
 
-        for (auto& genome : genomes)
-        {
-            delete genome;
-        }
-
-        genomes.clear();
+        KillPopulation();
 
         genomes = offspring;
-
         generation += 1;
     }
 
-    static std::vector<T*> Selection(const std::vector<T*>& population, float percent = 8.0f)
+    static std::vector<T*> Selection(const std::vector<T*>& population, float percent)
     {
         std::vector<T*> fittest;
         std::vector<T*> sortedByFitness = population;
@@ -66,7 +65,7 @@ public:
     {
         std::vector<int> roulette;
 
-        int maxIndex = fittest.size() - 1;
+        int maxIndex = static_cast<int>(fittest.size()) - 1;
 
         for (int i = 0; i < fittest.size(); i++)
         {
@@ -97,7 +96,7 @@ public:
     {
         std::vector<T*> offspring;
 
-        for (int i = 0; i < sizeOfNewPopulation; i += 1)
+        for (int i = 0; i < sizeOfNewPopulation; i++)
         {
             T* newGenome = new T();
 
@@ -120,7 +119,7 @@ public:
         }
     }
 
-    std::vector<T*>& GetGenomes()
+    const std::vector<T*>& GetGenomes() const
     {
         return genomes;
     }

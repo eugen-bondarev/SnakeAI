@@ -142,6 +142,17 @@ void Snake::Draw(Field& field) const
         int y = cell.y;
 
         field[x][y].state = RenderableCell::State::Snake;
+
+        float r = neuralNetwork.GetWeight(1, 1, 0);
+        float g = neuralNetwork.GetWeight(1, 2, 0);
+        float b = neuralNetwork.GetWeight(1, 3, 0);
+
+        field[x][y].color = ImVec4(
+            std::min(0.1f + r, 1.0f),
+            std::min(0.6f + g, 1.0f),
+            std::min(0.2f + b, 1.0f),
+            1.0f
+        );
     }
 }
 

@@ -28,5 +28,12 @@ private:
 
     Field field;
 
+    struct {
+        int border { 10 };
+        int cellSize { 18 };
+        int padding { 0 };
+        bool geneticSnakeColor { false };
+    } visual;
+
     std::unique_ptr<Population<Snake>> population;
 };

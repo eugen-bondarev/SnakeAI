@@ -18,6 +18,7 @@ void Field::Clear()
     {
         for (auto& cell : row)
         {
+            cell.color = Field::EMPTY_COLOR;
             cell.state = RenderableCell::State::Empty;
         }
     }

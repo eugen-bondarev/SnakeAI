@@ -17,6 +17,8 @@ public:
 
     Row& operator[](int i);
 
+    inline static ImVec4 EMPTY_COLOR = ImVec4(0.1f, 0.1f, 0.1f, 0.0f);
+
 private:
     std::array<Row, FIELD_SIZE> data;
 

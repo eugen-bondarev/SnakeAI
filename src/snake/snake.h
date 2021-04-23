@@ -45,6 +45,8 @@ public:
     void Control(bool up, bool left, bool down, bool right);
     float GetFitness() const override;
 
+    inline static ImVec4 DEFAULT_COLOR = ImVec4(0.2f, 1.0f, 0.3f, 1.0f);
+
 private:
     int id { 0 };
     std::vector<RenderableCell> cells;

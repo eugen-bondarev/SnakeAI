@@ -71,6 +71,16 @@ std::vector<value_t> NeuralNetwork::Feed(const std::vector<value_t>& inputs)
     return result;
 }
 
+weight_t NeuralNetwork::GetWeight(int layer, int neuron, int weight) const
+{
+    return layers[layer].neurons[neuron].weights[weight];
+}
+
+bias_t NeuralNetwork::GetBias(int layer, int neuron) const
+{
+    return layers[layer].neurons[neuron].bias;
+}
+
 const NeuralNetworkStructure& NeuralNetwork::GetStructure() const
 {
     return structure;

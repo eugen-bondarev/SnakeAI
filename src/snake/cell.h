@@ -20,17 +20,14 @@ struct RenderableCell : public Cell
 {
     enum class State
     {
-        Empty,
+        Empty = 0,
         Snake,
         Apple
     };
 
     State state { State::Empty };
 
-    ImU32 GetColor();
-
-    inline static constexpr unsigned int SIZE = 12;
-    inline static constexpr unsigned int PADDING = 1;
+    ImVec4 color;
 
     RenderableCell(int _x, int _y) : Cell(_x, _y) {}
     RenderableCell(Cell cell) : Cell(cell.x, cell.y) {}

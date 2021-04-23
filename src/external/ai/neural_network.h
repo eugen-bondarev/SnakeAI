@@ -15,6 +15,9 @@ public:
 
     const NeuralNetworkStructure& GetStructure() const;
 
+    weight_t GetWeight(int layer, int neuron, int weight) const;
+    bias_t GetBias(int layer, int neuron) const;
+
 private:
     std::vector<Layer> layers;
 

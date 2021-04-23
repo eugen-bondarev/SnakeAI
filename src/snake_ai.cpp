@@ -5,7 +5,7 @@
 SnakeAI::SnakeAI(Window& _window) : window { _window }
 {
     // 2000 to 5000 is an optimal number for this particular game.
-    static int initialAmountOfGames { 2000 };
+    static int initialAmountOfGames { 5000 };
     population = std::make_unique<Population<Snake>>(initialAmountOfGames);
 }
 
@@ -19,6 +19,10 @@ void SnakeAI::Update()
         ImGui::Text(("Best score pop.: "   + std::to_string(statistics.bestScoreOfPopulation)).c_str());
         ImGui::Text(("Av. fitness: "  + std::to_string(statistics.averageFitness)).c_str());
         ImGui::Text(("Av. score: "    + std::to_string(statistics.averageScore)).c_str());
+    ImGui::End();
+
+    ImGui::Begin("Visual");
+        ImGui::Checkbox("Genetic snake color", &visual.geneticSnakeColor);
     ImGui::End();
 
     ImGui::Begin("Game settings");
@@ -51,7 +55,7 @@ void SnakeAI::Update()
         }
     ImGui::End();
 
-    ImGui::Begin("Drawing", (bool*)0, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
+    ImGui::Begin("Drawing", (bool*)0, ImGuiWindowFlags_NoCollapse);
 
     ImGuiUtil::winRect.Update();
     
@@ -102,16 +106,61 @@ void SnakeAI::Update()
         }
     }
 
+    static ImU32 borderColor = ImU32(ImColor(ImVec4(0.1f, 0.1f, 0.1f, 1.0f)));
+
+    ImGui::GetWindowDrawList()->AddRectFilled(
+        ImVec2(ImGuiUtil::winRect.min.x, ImGuiUtil::winRect.min.y),         
+        ImVec2(ImGuiUtil::winRect.min.x + visual.border, ImGuiUtil::winRect.min.y + FIELD_SIZE * (visual.cellSize + visual.padding) + visual.border * 2), 
+        borderColor
+    );
+
+    ImGui::GetWindowDrawList()->AddRectFilled(
+        ImVec2(ImGuiUtil::winRect.min.x + FIELD_SIZE * (visual.cellSize + visual.padding) + visual.border, ImGuiUtil::winRect.min.y),         
+        ImVec2(ImGuiUtil::winRect.min.x + FIELD_SIZE * (visual.cellSize + visual.padding) + visual.border * 2, ImGuiUtil::winRect.min.y + FIELD_SIZE * (visual.cellSize + visual.padding) + visual.border * 2), 
+        borderColor
+    );
+
+    ImGui::GetWindowDrawList()->AddRectFilled(
+        ImVec2( ImGuiUtil::winRect.min.x,  ImGuiUtil::winRect.min.y),         
+        ImVec2(ImGuiUtil::winRect.min.x + FIELD_SIZE * (visual.cellSize + visual.padding) + visual.border * 2,ImGuiUtil::winRect.min.y + visual.border), 
+        borderColor
+    );
+
+    ImGui::GetWindowDrawList()->AddRectFilled(
+        ImVec2(ImGuiUtil::winRect.min.x, ImGuiUtil::winRect.min.y + FIELD_SIZE * (visual.cellSize + visual.padding) + visual.border),         
+        ImVec2(ImGuiUtil::winRect.min.x + FIELD_SIZE * (visual.cellSize + visual.padding) + visual.border * 2,ImGuiUtil::winRect.min.y + FIELD_SIZE * (visual.cellSize + visual.padding) + visual.border * 2), 
+        borderColor
+    );
+
     for (int x = 0; x < FIELD_SIZE; x++)
     {
         for (int y = 0; y < FIELD_SIZE; y++)
         {
-            float minX = ImGuiUtil::winRect.min.x + x * RenderableCell::SIZE + RenderableCell::PADDING;
-            float minY = ImGuiUtil::winRect.min.y + y * RenderableCell::SIZE + RenderableCell::PADDING;
-            float maxX = ImGuiUtil::winRect.min.x + (x + 1) * RenderableCell::SIZE;
-            float maxY = ImGuiUtil::winRect.min.y + (y + 1) * RenderableCell::SIZE;
+            float minX = ImGuiUtil::winRect.min.x + x * visual.cellSize + visual.padding + static_cast<float>(visual.border);
+            float minY = ImGuiUtil::winRect.min.y + y * visual.cellSize + visual.padding + static_cast<float>(visual.border);
+            float maxX = ImGuiUtil::winRect.min.x + (x + 1) * visual.cellSize + static_cast<float>(visual.border);
+            float maxY = ImGuiUtil::winRect.min.y + (y + 1) * visual.cellSize + static_cast<float>(visual.border);
 
-            ImGui::GetWindowDrawList()->AddRectFilled(ImVec2(minX, minY), ImVec2(maxX, maxY), field[x][y].GetColor());
+            ImVec4 color = field[x][y].color;
+
+            static const int appleBorder = 6;
+            switch (field[x][y].state)
+            {
+                case RenderableCell::State::Apple:
+                    ImGui::GetWindowDrawList()->AddRectFilled(ImVec2(minX + appleBorder, minY + appleBorder), ImVec2(maxX - appleBorder, maxY - appleBorder), ImU32(ImColor(color)));
+                    break;
+                
+                case RenderableCell::State::Snake:
+                    if (visual.geneticSnakeColor)
+                        ImGui::GetWindowDrawList()->AddRectFilled(ImVec2(minX, minY), ImVec2(maxX, maxY), ImU32(ImColor(color)));
+                    else
+                        ImGui::GetWindowDrawList()->AddRectFilled(ImVec2(minX, minY), ImVec2(maxX, maxY), ImU32(ImColor(Snake::DEFAULT_COLOR)));
+                    break;
+                
+                case RenderableCell::State::Empty:
+                    ImGui::GetWindowDrawList()->AddRectFilled(ImVec2(minX, minY), ImVec2(maxX, maxY), ImU32(ImColor(color)));
+                    break;
+            }
         }
     }
 
