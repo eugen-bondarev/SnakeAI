@@ -32,15 +32,16 @@ public:
         KillPopulation();
     }
 
-    void Evolution()
+    void Evolution(float selection = 8.0f)
     {
-        std::vector<T*> fittest = Population<T>::Selection(genomes, 8.0f);
+        std::vector<T*> fittest = Population<T>::Selection(genomes, selection);
         std::vector<int> roulette = Population<T>::CreateRoulette(fittest);
         std::vector<T*> offspring = Population<T>::Crossover(fittest, static_cast<int>(genomes.size()), roulette);
 
         KillPopulation();
 
         genomes = offspring;
+
         generation += 1;
     }
 

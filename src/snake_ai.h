@@ -16,6 +16,15 @@ public:
 
 private:
     Window& window;
+
+    struct {
+        int amountOfGenomes { 5000 };
+        float selection { 8.0f };
+        bool running { true };
+        std::unique_ptr<Population<Snake>> population;
+    } simulation;
+
+    void RenderSimulationSettings();
     
     GameStatistics statistics;
 
@@ -39,7 +48,6 @@ private:
 
     Field field;
 
-    std::unique_ptr<Population<Snake>> population;
 
     void UpdatePopulation();
     void RenderGames();

@@ -4,15 +4,45 @@
 
 SnakeAI::SnakeAI(Window& _window) : window { _window }
 {
-    // 2000 to 5000 is an optimal number for this particular game.
-    static int initialAmountOfGames { 5000 };
-    population = std::make_unique<Population<Snake>>(initialAmountOfGames);
+}
+
+void SnakeAI::RenderSimulationSettings()
+{
+    ImGui::Begin("Simulation settings");
+        ImGui::PushItemWidth(100);
+        ImGui::DragInt("Amount of genomes", &simulation.amountOfGenomes, 1.0f, 10, 10000);
+        ImGui::DragFloat("Selection (%)", &simulation.selection, 0.1f, 10, 10000);
+        ImGui::PopItemWidth();
+        if (!simulation.population)
+        {
+            if (ImGui::Button("Create", ImVec2(100, 18)))
+            {
+                simulation.population = std::make_unique<Population<Snake>>(simulation.amountOfGenomes);
+            }
+        }
+        else
+        {
+            if (ImGui::Button(simulation.running ? "Pause" : "Play", ImVec2(100, 18)))
+            {
+                simulation.running = !simulation.running;
+            }
+
+            ImGui::SameLine();
+
+            if (ImGui::Button("Destroy"))
+            {
+                simulation.population.reset();
+            }
+        }
+    ImGui::End();
 }
 
 void SnakeAI::RenderStatistics()
 {
     ImGui::Begin("Statistics");
-        ImGui::Text(("Generation: "        + std::to_string(population->GetGeneration())).c_str());
+        if (simulation.population)
+            ImGui::Text(("Generation: "        + std::to_string(simulation.population->GetGeneration())).c_str());
+
         ImGui::Text(("Best fitness: "      + std::to_string(statistics.bestFitness)).c_str());
         ImGui::Text(("Best score: "        + std::to_string(statistics.bestScore)).c_str());
         ImGui::Text(("Best fitness pop.: " + std::to_string(statistics.bestFitnessOfPopulation)).c_str());
@@ -39,15 +69,15 @@ void SnakeAI::RenderSettings()
         {
             if (ImGui::Button("Reborn all"))
             {
-                for (auto& game : population->GetGenomes())
+                for (auto& game : simulation.population->GetGenomes())
                 {
                     game->Reset();
                 }
             }
 
-            for (int i = 0; i < population->GetGenomes().size(); i++)
+            for (int i = 0; i < simulation.population->GetGenomes().size(); i++)
             {
-                Snake& game = *population->GetGenomes()[i];
+                Snake& game = *simulation.population->GetGenomes()[i];
 
                 std::string label = "#" + std::to_string(game.GetID());
                 ImGui::AlignTextToFramePadding();
@@ -67,7 +97,7 @@ void SnakeAI::UpdatePopulation()
     static float updateTimer { 0 };
 
     updateTimer += window.GetDeltaTime();
-    if (settings.forceFullSpeed || updateTimer >= 0.2f * (1.0f / settings.speed))
+    if (simulation.running && (settings.forceFullSpeed || updateTimer >= 0.2f * (1.0f / settings.speed)))
     {
         bool populationIsAlive { false };
 
@@ -76,7 +106,7 @@ void SnakeAI::UpdatePopulation()
         statistics.bestFitnessOfPopulation = 0;
         statistics.bestScoreOfPopulation = 0;
 
-        for (auto& game : population->GetGenomes())
+        for (auto& game : simulation.population->GetGenomes())
         {
             game->SetStatistics(&statistics);
 
@@ -88,13 +118,13 @@ void SnakeAI::UpdatePopulation()
             }
         }
 
-        statistics.averageFitness /= population->GetGenomes().size();
-        statistics.averageScore /= population->GetGenomes().size();
+        statistics.averageFitness /= simulation.population->GetGenomes().size();
+        statistics.averageScore /= simulation.population->GetGenomes().size();
 
         if (!populationIsAlive)
         {
-            population->Evolution();
-            population->Restart();
+            simulation.population->Evolution(simulation.selection);
+            simulation.population->Restart();
         }
             
         updateTimer = 0;
@@ -109,7 +139,7 @@ void SnakeAI::RenderGames()
 
     field.Clear();
 
-    for (auto& game : population->GetGenomes())
+    for (auto& game : simulation.population->GetGenomes())
     {
         if (game->IsAlive())
         {
@@ -181,9 +211,13 @@ void SnakeAI::RenderGames()
 
 void SnakeAI::Update()
 {
+    RenderSimulationSettings();
     RenderStatistics();
     RenderVisualSettings();
     RenderSettings();
+
+    if (!simulation.population)
+        return;
 
     UpdatePopulation();
     RenderGames();
