@@ -152,25 +152,25 @@ void SnakeAI::RenderGames()
 
     ImGui::GetWindowDrawList()->AddRectFilled(
         ImVec2(ImGuiUtil::winRect.min.x, ImGuiUtil::winRect.min.y),         
-        ImVec2(ImGuiUtil::winRect.min.x + visual.border, ImGuiUtil::winRect.min.y + FIELD_SIZE * (visual.cellSize + visual.padding) + visual.border * 2), 
+        ImVec2(ImGuiUtil::winRect.min.x + visual.border, ImGuiUtil::winRect.min.y + FIELD_SIZE * (visual.cellSize) + visual.border * 2), 
         borderColor
     );
 
     ImGui::GetWindowDrawList()->AddRectFilled(
-        ImVec2(ImGuiUtil::winRect.min.x + FIELD_SIZE * (visual.cellSize + visual.padding) + visual.border, ImGuiUtil::winRect.min.y),         
-        ImVec2(ImGuiUtil::winRect.min.x + FIELD_SIZE * (visual.cellSize + visual.padding) + visual.border * 2, ImGuiUtil::winRect.min.y + FIELD_SIZE * (visual.cellSize + visual.padding) + visual.border * 2), 
+        ImVec2(ImGuiUtil::winRect.min.x + FIELD_SIZE * (visual.cellSize) + visual.border, ImGuiUtil::winRect.min.y),         
+        ImVec2(ImGuiUtil::winRect.min.x + FIELD_SIZE * (visual.cellSize) + visual.border * 2, ImGuiUtil::winRect.min.y + FIELD_SIZE * (visual.cellSize) + visual.border * 2), 
         borderColor
     );
 
     ImGui::GetWindowDrawList()->AddRectFilled(
         ImVec2( ImGuiUtil::winRect.min.x,  ImGuiUtil::winRect.min.y),         
-        ImVec2(ImGuiUtil::winRect.min.x + FIELD_SIZE * (visual.cellSize + visual.padding) + visual.border * 2,ImGuiUtil::winRect.min.y + visual.border), 
+        ImVec2(ImGuiUtil::winRect.min.x + FIELD_SIZE * (visual.cellSize) + visual.border * 2,ImGuiUtil::winRect.min.y + visual.border), 
         borderColor
     );
 
     ImGui::GetWindowDrawList()->AddRectFilled(
-        ImVec2(ImGuiUtil::winRect.min.x, ImGuiUtil::winRect.min.y + FIELD_SIZE * (visual.cellSize + visual.padding) + visual.border),         
-        ImVec2(ImGuiUtil::winRect.min.x + FIELD_SIZE * (visual.cellSize + visual.padding) + visual.border * 2,ImGuiUtil::winRect.min.y + FIELD_SIZE * (visual.cellSize + visual.padding) + visual.border * 2), 
+        ImVec2(ImGuiUtil::winRect.min.x, ImGuiUtil::winRect.min.y + FIELD_SIZE * (visual.cellSize) + visual.border),         
+        ImVec2(ImGuiUtil::winRect.min.x + FIELD_SIZE * (visual.cellSize) + visual.border * 2,ImGuiUtil::winRect.min.y + FIELD_SIZE * (visual.cellSize) + visual.border * 2), 
         borderColor
     );
 

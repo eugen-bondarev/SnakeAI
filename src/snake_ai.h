@@ -40,7 +40,7 @@ private:
     struct {
         int border { 10 };
         int cellSize { 18 };
-        int padding { 0 };
+        int padding { 2 };
         bool geneticSnakeColor { false };
     } visual;
 
