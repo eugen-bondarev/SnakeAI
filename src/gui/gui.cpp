@@ -11,6 +11,8 @@ GUI::GUI(GLFWwindow* _glfwWindow) : glfwWindow { _glfwWindow }
 	ImGuiIO& io = ImGui::GetIO();
     io.ConfigFlags = ImGuiConfigFlags_DockingEnable | ImGuiConfigFlags_ViewportsEnable;
 
+    io.Fonts->AddFontFromFileTTF("Roboto-Regular.ttf", 16);
+
 	ImGui_ImplGlfw_InitForOpenGL(glfwWindow, true);
 	ImGui_ImplOpenGL3_Init();
 

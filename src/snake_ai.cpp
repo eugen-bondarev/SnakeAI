@@ -15,14 +15,14 @@ void SnakeAI::RenderSimulationSettings()
         ImGui::PopItemWidth();
         if (!simulation.population)
         {
-            if (ImGui::Button("Create", ImVec2(100, 18)))
+            if (ImGui::Button("Create"))
             {
                 simulation.population = std::make_unique<Population<Snake>>(simulation.amountOfGenomes);
             }
         }
         else
         {
-            if (ImGui::Button(simulation.running ? "Pause" : "Play", ImVec2(100, 18)))
+            if (ImGui::Button(simulation.running ? "Pause" : "Play"))
             {
                 simulation.running = !simulation.running;
             }
@@ -64,31 +64,6 @@ void SnakeAI::RenderSettings()
     ImGui::Begin("Game settings");
         ImGui::DragFloat("Speed", &settings.speed, 0.01f, 0.2f, 100.0f);
         ImGui::Checkbox("Force full speed", &settings.forceFullSpeed);
-
-        if (ImGui::CollapsingHeader("Games"))
-        {
-            if (ImGui::Button("Reborn all"))
-            {
-                for (auto& game : simulation.population->GetGenomes())
-                {
-                    game->Reset();
-                }
-            }
-
-            for (int i = 0; i < simulation.population->GetGenomes().size(); i++)
-            {
-                Snake& game = *simulation.population->GetGenomes()[i];
-
-                std::string label = "#" + std::to_string(game.GetID());
-                ImGui::AlignTextToFramePadding();
-                ImGui::Text(label.c_str()); ImGui::SameLine();
-
-                if (ImGui::Button(("Reborn##" + std::to_string(i)).c_str()))
-                {
-                    game.Reset();
-                }
-            }
-        }
     ImGui::End();
 }
 
